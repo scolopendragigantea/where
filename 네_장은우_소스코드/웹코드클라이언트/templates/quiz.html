@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<!--
+	Eventually by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Eventually by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="static/css/main.css" />
+	</head>
+
+
+	<body>
+		<div class="playground">
+			<div class="bar-container">
+				<progress class="progressTag" value={{progress_value}} max="100" />
+			</div>
+		</div>
+
+		<form method="GET" action="/name">
+			<div class="is-preload">
+				<div class="textbox"> {{koreana}}</div>
+				<div class="textbox1">{{englisha}} </div>
+
+				<input id="longans-input" name="longans" type="text" style="margin-bottom: 10px;" placeholder="단어 입력해주세요">
+				<div class="button-container">
+					<input id="submit-btn" type="submit" value="제출">
+				</div>
+			</div>
+		</form>
+		<div id="message"></div>
+
+
+
+		<!-- Scripts -->
+		<script language="javascript">
+            function handleNextQuestion() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/name", true);
+                xhr.send();
+                document.getElementById("next-button").disabled = true;
+            }
+
+
+			var k = parseFloat("{{ progress }}");
+            var userInput = "{{ longans_input }}";
+            if (userInput === "0") {
+                const message = document.getElementById("message");
+                message.textContent = "Correct!";
+                message.classList.remove("error");
+                message.classList.add("success");
+                const buttonContainer = document.querySelector(".button-container");
+                const newButton = document.createElement("button");
+                newButton.innerHTML = "다음 문제";
+                buttonContainer.appendChild(newButton);
+                const nextButton = document.querySelector(".next-button");
+                nextButton.addEventListener("click", handleNextQuestion);
+            }
+            else if (userInput === "1") {
+                const message = document.getElementById("message");
+                message.textContent = "Incorrect. Please try again.";
+                message.classList.remove("success");
+                message.classList.add("error");
+
+            }
+            else if (userInput === "3") {
+                const message = document.getElementById("message");
+                message.textContent = "Incorrect. Please try again.";
+                message.classList.remove("success");
+                message.classList.add("error");
+                const buttonContainer = document.querySelector(".button-container");
+                const newButton = document.createElement("button");
+                newButton.innerHTML = "정답보기";
+                buttonContainer.appendChild(newButton);
+                const nextButton = document.querySelector(".next-button");
+                nextButton.addEventListener("click", handleNextQuestion);
+            }
+            else {
+                const message = document.getElementById("message");
+                message.textContent = "";
+                message.classList.remove("success");
+                message.classList.remove("error");
+            }
+            function tag(k) {
+                let progress = document.querySelector('.progressTag')
+                let interval = 1
+                let updatesPerSecond = 1000 / 100
+                let end = progress.max * k
+
+                function animator() {
+                    progress.value = progress.value + interval
+                    if (progress.value + interval < end) {
+                        setTimeout(animator, updatesPerSecond);
+                    } else {
+                        progress.value = end
+                    }
+                }
+
+                setTimeout(() => {
+                    animator()
+                }, updatesPerSecond)
+			}
+            tag(k)
+
+
+		</script>
+
+
+	</body>
+
+	  
+</html>
+
+
